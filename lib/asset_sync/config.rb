@@ -24,6 +24,7 @@ module AssetSync
     attr_accessor :fog_provider          # Currently Supported ['AWS', 'Rackspace']
     attr_accessor :fog_directory         # e.g. 'the-bucket-name'
     attr_accessor :fog_region            # e.g. 'eu-west-1'
+    attr_accessor :fog_use_iam_profile
 
     # Amazon AWS
     attr_accessor :aws_access_key_id, :aws_secret_access_key, :aws_reduced_redundancy
@@ -39,8 +40,8 @@ module AssetSync
     validates :fog_provider,          :presence => true
     validates :fog_directory,         :presence => true
 
-    validates :aws_access_key_id,     :presence => true, :if => :aws?
-    validates :aws_secret_access_key, :presence => true, :if => :aws?
+    #validates :aws_access_key_id,     :presence => true, :if => :aws?
+    #validates :aws_secret_access_key, :presence => true, :if => :aws? 
     validates :rackspace_username,    :presence => true, :if => :rackspace?
     validates :rackspace_api_key,     :presence => true, :if => :rackspace?
     validates :google_storage_secret_access_key,  :presence => true, :if => :google?
@@ -57,6 +58,7 @@ module AssetSync
       self.ignored_files = []
       self.custom_headers = {}
       self.enabled = true
+      self.fog_use_iam_profile = false
       self.run_on_precompile = true
       self.cdn_distribution_id = nil
       self.invalidate = []
@@ -172,11 +174,18 @@ module AssetSync
 
     def fog_options
       options = { :provider => fog_provider }
+      
       if aws?
+        if fog_use_iam_profile
+          options.merge!({
+            :use_iam_profile => fog_use_iam_profile
+        })
+        else
         options.merge!({
           :aws_access_key_id => aws_access_key_id,
           :aws_secret_access_key => aws_secret_access_key
         })
+        end        
       elsif rackspace?
         options.merge!({
           :rackspace_username => rackspace_username,
