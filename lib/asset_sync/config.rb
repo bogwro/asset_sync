@@ -179,12 +179,12 @@ module AssetSync
         if fog_use_iam_profile
           options.merge!({
             :use_iam_profile => fog_use_iam_profile
-        })
+          })
         else
-        options.merge!({
-          :aws_access_key_id => aws_access_key_id,
-          :aws_secret_access_key => aws_secret_access_key
-        })
+          options.merge!({
+            :aws_access_key_id => aws_access_key_id,
+            :aws_secret_access_key => aws_secret_access_key
+          })
         end        
       elsif rackspace?
         options.merge!({
