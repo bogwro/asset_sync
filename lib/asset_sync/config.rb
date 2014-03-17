@@ -168,7 +168,7 @@ module AssetSync
       self.fog_directory          = yml["bucket"] if yml.has_key?("bucket")
       self.fog_region             = yml["region"] if yml.has_key?("region")
 
-      log "ASSET_SYNC_VARS: aws_access_key_id = #{self.aws_access_key_id}; aws_secret_access_key = #{self.aws_secret_access_key}; fog_directory = #{self.fog_directory}; fog_region = #{self.fog_region}"
+      AssetSync.log "ASSET_SYNC_VARS: aws_access_key_id = #{self.aws_access_key_id}; aws_secret_access_key = #{self.aws_secret_access_key}; fog_directory = #{self.fog_directory}; fog_region = #{self.fog_region}"
 
       self.public_path            = yml["public_path"] if yml.has_key?("public_path")
     end
